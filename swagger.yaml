@@ -1,0 +1,563 @@
+---
+swagger: "2.0"
+info:
+  description: These are the services for Services Orders
+  version: "1.0"
+  title: Services Orders API Swagger
+host: virtserver.swaggerhub.com
+basePath: /katideas/service-order-api/1.0
+tags:
+- name: services orders
+  description: Everything about your Services Orders
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+- name: supplier
+  description: Access to Supplier Information
+- name: area
+  description: Access to Area Information
+  externalDocs:
+    description: Find out more about our store
+    url: http://swagger.io
+- name: line item
+  description: Access to Line Item
+  externalDocs:
+    description: Find out more about our store
+    url: http://swagger.io
+schemes:
+- https
+paths:
+  /serviceorder/{id}:
+    get:
+      tags:
+      - services orders
+      summary: Find Service order by ID
+      description: For valid response try integer IDs with value >= 1 and <= 10.\ \ Other values will generated exceptions
+      operationId: getOrderById
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: ID of item that needs to be fetched
+        required: true
+        type: integer
+        maximum: 10
+        minimum: 1
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/ServiceOrder'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Order not found
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:getOrderById/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          id: $input.params('id')
+        requestTemplates:
+          application/json: |-
+            {
+              "id" : "$input.params('id')"
+            }
+    delete:
+      tags:
+      - services orders
+      summary: Delete service order by ID
+      description: For valid response try integer IDs with positive integer value.\ \ Negative or non-integer values will generate API errors
+      operationId: deleteServiceOrder
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: ID of the order that needs to be deleted
+        required: true
+        type: integer
+        minimum: 1
+        format: int64
+      responses:
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Order not found
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:deleteServiceOrder/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          id: $input.params('id')
+        requestTemplates:
+          application/json: |-
+            {
+              "id" : "$input.params('id')"
+            }
+  /service-order:
+    get:
+      tags:
+      - services orders
+      summary: Retrieve all Services Orders
+      description: Retrieve all Services Orders
+      operationId: getAllServiceOrders
+      produces:
+      - application/json
+      - application/xml
+      parameters: []
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/ServiceOrder'
+        404:
+          description: Orders not found
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:getAllServiceOrders/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters: {}
+        requestTemplates: {}
+    post:
+      tags:
+      - services orders
+      summary: Add an Service Order
+      operationId: placeServiceOrder
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: order added
+        required: true
+        schema:
+          $ref: '#/definitions/ServiceOrder'
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/ServiceOrder'
+        400:
+          description: Invalid Order
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:placeServiceOrder/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          body: $input.body
+        requestTemplates:
+          application/json: |-
+            {
+              "body" : "$input.body"
+            }
+    put:
+      tags:
+      - services orders
+      summary: Update an existing service order
+      operationId: updateServiceOrder
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Service Order object that needs to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/Item'
+      responses:
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Item not found
+        405:
+          description: Validation exception
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:updateServiceOrder/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          body: $input.body
+        requestTemplates:
+          application/json: |-
+            {
+              "body" : "$input.body"
+            }
+  /supplier/{supplierId}:
+    get:
+      tags:
+      - supplier
+      summary: Find Supplier by ID
+      description: For valid response try integer IDs with value >= 1 and <= 10.\ \ Other values will generated exceptions
+      operationId: getSupplierById
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: supplierId
+        in: path
+        description: ID of item that needs to be fetched
+        required: true
+        type: integer
+        maximum: 10
+        minimum: 1
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Supplier'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Supplier not found
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:getSupplierById/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          supplierId: $input.params('supplierId')
+        requestTemplates:
+          application/json: |-
+            {
+              "supplierId" : "$input.params('supplierId')"
+            }
+  /area/{areaId}:
+    get:
+      tags:
+      - area
+      summary: Find Area by ID
+      description: For valid response try integer IDs with value >= 1 and <= 10.\ \ Other values will generated exceptions
+      operationId: getAreaById
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: areaId
+        in: path
+        description: ID of item that needs to be fetched
+        required: true
+        type: integer
+        maximum: 10
+        minimum: 1
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Area'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Supplier not found
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:getAreaById/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          areaId: $input.params('areaId')
+        requestTemplates:
+          application/json: |-
+            {
+              "areaId" : "$input.params('areaId')"
+            }
+  /line-item:
+    post:
+      tags:
+      - line item
+      summary: Add a new item to the service order
+      operationId: addItem
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Item object that needs to be added to the service order
+        required: true
+        schema:
+          $ref: '#/definitions/Item'
+      responses:
+        405:
+          description: Invalid input
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:addItem/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          body: $input.body
+        requestTemplates:
+          application/json: |-
+            {
+              "body" : "$input.body"
+            }
+    put:
+      tags:
+      - line item
+      summary: Update an existing item
+      operationId: updateItem
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Item object that needs to be added to the service order
+        required: true
+        schema:
+          $ref: '#/definitions/Item'
+      responses:
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Item not found
+        405:
+          description: Validation exception
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:updateItem/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          body: $input.body
+        requestTemplates:
+          application/json: |-
+            {
+              "body" : "$input.body"
+            }
+  /line-item/{id}:
+    get:
+      tags:
+      - line item
+      summary: Find item by ID
+      description: Returns a single item
+      operationId: getItemById
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: ID of item to return
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Item'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Item not found
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:getItemById/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          id: $input.params('id')
+        requestTemplates:
+          application/json: |-
+            {
+              "id" : "$input.params('id')"
+            }
+    delete:
+      tags:
+      - line item
+      summary: Deleted a item
+      operationId: deleteItem
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: Item id to delete
+        required: true
+        type: integer
+        format: int64
+      responses:
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Item not found
+      x-amazon-apigateway-integration:
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:045006297473:function:deleteItem/invocations
+        responses:
+          default:
+            statusCode: "200"
+        type: aws
+        parameters:
+          id: $input.params('id')
+        requestTemplates:
+          application/json: |-
+            {
+              "id" : "$input.params('id')"
+            }
+definitions:
+  ServiceOrder:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      orderNumber:
+        type: string
+      orderDate:
+        type: string
+        format: date-time
+      endDate:
+        type: string
+        format: date-time
+      area:
+        type: array
+        items:
+          $ref: '#/definitions/Area'
+      supplier:
+        type: array
+        items:
+          $ref: '#/definitions/Supplier'
+      requester:
+        type: string
+      numberRequest:
+        type: string
+      quantity:
+        type: integer
+        format: int32
+      priceTotal:
+        type: integer
+        format: int32
+      paymentMethod:
+        type: string
+      reference:
+        type: string
+      status:
+        type: string
+        description: Order Status
+        enum:
+        - Draft
+        - Open
+        - Cancelled
+      complete:
+        type: boolean
+        default: false
+  Area:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      code:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+  Item:
+    type: object
+    required:
+    - id
+    properties:
+      id:
+        type: integer
+        format: int64
+      code:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      price:
+        type: string
+      quantity:
+        type: string
+      type:
+        type: string
+      status:
+        type: string
+        description: item status in the service order
+        enum:
+        - enabled
+        - disabled
+  Supplier:
+    type: object
+    required:
+    - id
+    properties:
+      id:
+        type: integer
+        format: int64
+      code:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      telephoneNumber:
+        type: string
+      address:
+        type: string
+      status:
+        type: string
+        description: item status in the service order
+        enum:
+        - enabled
+        - disabled
+x-aws-api-id: yuazsts0dg
